@@ -13,7 +13,7 @@
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+# GNU Affero General Public License for more details.I
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
@@ -61,12 +61,16 @@ def get_wikicontent(term) -> str:
     wiki = WikiConnect(cache_expiry_hrs=conf["cache_expire_after"])
 
     popup_type: str = conf["popup_type"]
-    if popup_type == "mobile":
-        content = wiki.get_mobile_html(term)
-    elif popup_type == "extract":
-        content = wiki.get_extract(term)
-    else:
-        raise ValueError(f"popup_type {popup_type} not supported! Please check configuration file.")
+  def get_wikicontent(term) -> str:
+    """Return Britannica URL instead of HTML"""
+    conf = config["local"]
+    wiki = WikiConnect(cache_expiry_hrs=conf["cache_expire_after"])
+
+    # Britannica URL
+    url = wiki.get_britannica_url(term)
+
+    # Return JavaScript that tells the popup to load that URL
+    return f'<iframe src="{url}" width="100%" height="100%"></iframe>'
 
     if conf["strip_css"] is True:
         wiki_css_re = re.compile('<link rel="stylesheet" href="//meta.wikimedia.org/api/rest_v1/data/css/mobile/base">')
